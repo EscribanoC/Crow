@@ -10,4 +10,6 @@ public interface DonacionService {
     List<Donacion> obtenerPorUsuario(Long usuarioId);
     List<Donacion> obtenerPorCrow(Long crowId);
     Donacion actualizarDonacion(Long id, Donacion donacion);
+    List<Donacion> obtenerDonacionesPorUsuario(Long id);
+    List<Donacion> obtenerDonacionesPorCrow(Long crowId);
 }

@@ -47,4 +47,12 @@ public class DonacionServiceImpl implements DonacionService {
 
         return donacionRepository.save(donacion);
     }
+
+    @Override
+    public List<Donacion> obtenerDonacionesPorUsuario(Long id) {return donacionRepository.findByUsuarioId(id);}
+
+    @Override
+    public List<Donacion> obtenerDonacionesPorCrow(Long crowId) {return donacionRepository.findByCrowId(crowId);}
+
+
 }

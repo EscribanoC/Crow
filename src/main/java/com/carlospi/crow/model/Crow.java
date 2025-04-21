@@ -16,6 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @Entity
+@Builder
 public class Crow {
 
     @Id

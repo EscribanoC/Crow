@@ -7,8 +7,10 @@ import java.util.Optional;
 
 public interface NotificacionService {
     Notificacion crearNotificacion(Notificacion notificacion);
-    List<Notificacion> obtenerPorUsuario(Long usuarioId);
     Notificacion actualizarNotificacion(Long id, Notificacion notificacion);
     Optional<Notificacion> obtenerPorId(Long id);
     void eliminarNotificacion(Long id);
+    List<Notificacion> obtenerNotificacionesPorUsuario(Long id);
+
+    Notificacion obtenerNotificacionPorId(Long id);
 }

@@ -23,8 +23,13 @@ public class NotificacionServiceImpl implements NotificacionService {
     }
 
     @Override
-    public List<Notificacion> obtenerPorUsuario(Long usuarioId) {
+    public List<Notificacion> obtenerNotificacionesPorUsuario(Long usuarioId) {
         return notificacionRepository.findByUsuarioIdOrderByFechaDesc(usuarioId);
+    }
+
+    @Override
+    public Notificacion obtenerNotificacionPorId(Long id) {
+        return null;
     }
 
     @Override
@@ -34,7 +39,6 @@ public class NotificacionServiceImpl implements NotificacionService {
 
         notificacion.setTipo(notificacionActualizada.getTipo());
         notificacion.setMensaje(notificacionActualizada.getMensaje());
-        // Si quieres permitir actualizar la fecha, también puedes incluirla
 
         return notificacionRepository.save(notificacion);
     }
