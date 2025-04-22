@@ -50,5 +50,10 @@ public class UsuarioServiceImpl implements UsuarioService {
     public void eliminarUsuario(Long id) {
         usuarioRepository.deleteById(id);
     }
+
+    @Override
+    public List<Usuario> obtenerSeguidores(Long usuarioId) {
+        return usuarioRepository.findSeguidoresByUsuarioId(usuarioId);
+    }
 }
 

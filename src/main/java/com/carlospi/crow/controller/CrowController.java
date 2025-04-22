@@ -2,9 +2,12 @@ package com.carlospi.crow.controller;
 
 import com.carlospi.crow.config.JwtService;
 import com.carlospi.crow.model.Crow;
+import com.carlospi.crow.model.Notificacion;
 import com.carlospi.crow.model.Usuario;
+import com.carlospi.crow.model.enumeration.TipoNotificacion;
 import com.carlospi.crow.repository.UsuarioRepository;
 import com.carlospi.crow.service.CrowService;
+import com.carlospi.crow.service.NotificacionService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -12,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -22,6 +26,7 @@ public class CrowController {
     private final CrowService crowService;
     private final UsuarioRepository usuarioRepository;
     private final JwtService jwtService;
+    private final NotificacionService notificacionService;
 
     @PostMapping
     public ResponseEntity<Crow> crearCrow(@RequestBody Crow crow, HttpServletRequest request) {
@@ -30,6 +35,12 @@ public class CrowController {
 
         crow.setUsuario(usuario);
         Crow nuevoCrow = crowService.crearCrow(crow);
+
+        List<Usuario> seguidores = usuarioRepository.findSeguidoresByUsuarioId(usuario.getId());
+        for (Usuario seguidor : seguidores) {
+            String mensaje = crow.getUsuario() + " ha creado un nuevo Crow: \"" + crow.getTitulo() + "\".";
+            notificacionService.crearNotificacion(TipoNotificacion.NUEVO_CROW, mensaje, seguidor);
+        }
 
         return ResponseEntity.status(HttpStatus.CREATED).body(nuevoCrow);
     }

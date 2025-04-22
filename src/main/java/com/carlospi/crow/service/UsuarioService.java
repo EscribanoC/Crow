@@ -11,5 +11,6 @@ public interface UsuarioService {
     List<Usuario> listarUsuarios();
     Usuario actualizarUsuario(Long id, Usuario usuarioActualizado);
     void eliminarUsuario(Long id);
+    public List<Usuario> obtenerSeguidores(Long usuarioId);
 }
 

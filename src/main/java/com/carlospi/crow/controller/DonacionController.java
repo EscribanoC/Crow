@@ -4,9 +4,11 @@ import com.carlospi.crow.config.JwtService;
 import com.carlospi.crow.model.Crow;
 import com.carlospi.crow.model.Donacion;
 import com.carlospi.crow.model.Usuario;
+import com.carlospi.crow.model.enumeration.TipoNotificacion;
 import com.carlospi.crow.repository.CrowRepository;
 import com.carlospi.crow.repository.UsuarioRepository;
 import com.carlospi.crow.service.DonacionService;
+import com.carlospi.crow.service.NotificacionService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,6 +27,7 @@ public class DonacionController {
     private final JwtService jwtService;
     private final UsuarioRepository usuarioRepository;
     private final CrowRepository crowRepository;
+    private final NotificacionService notificacionService;
 
     @PostMapping("/{crowId}")
     public ResponseEntity<Donacion> donar(
@@ -44,6 +47,9 @@ public class DonacionController {
         donacion.setUsuario(usuario);
 
         Donacion donacionCreada = donacionService.crearDonacion(donacion);
+
+        String mensaje = usuario.getUsuario() + " ha donado " + cantidad + "€ a tu Crow \"" + crow.getTitulo() + "\".";
+        notificacionService.crearNotificacion(TipoNotificacion.DONACION, mensaje, crow.getUsuario());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(donacionCreada);
     }

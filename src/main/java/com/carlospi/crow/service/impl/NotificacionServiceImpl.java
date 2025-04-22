@@ -1,6 +1,8 @@
 package com.carlospi.crow.service.impl;
 
 import com.carlospi.crow.model.Notificacion;
+import com.carlospi.crow.model.Usuario;
+import com.carlospi.crow.model.enumeration.TipoNotificacion;
 import com.carlospi.crow.repository.NotificacionRepository;
 import com.carlospi.crow.service.NotificacionService;
 import org.springframework.stereotype.Service;
@@ -18,8 +20,12 @@ public class NotificacionServiceImpl implements NotificacionService {
     }
 
     @Override
-    public Notificacion crearNotificacion(Notificacion notificacion) {
-        return notificacionRepository.save(notificacion);
+    public void crearNotificacion(TipoNotificacion tipoNotificacion, String mensaje, Usuario usuario) {
+        Notificacion notificacion = new Notificacion();
+        notificacion.setTipo(tipoNotificacion);
+        notificacion.setMensaje(mensaje);
+        notificacion.setUsuario(usuario);
+        notificacionRepository.save(notificacion);
     }
 
     @Override
@@ -29,18 +35,8 @@ public class NotificacionServiceImpl implements NotificacionService {
 
     @Override
     public Notificacion obtenerNotificacionPorId(Long id) {
-        return null;
-    }
-
-    @Override
-    public Notificacion actualizarNotificacion(Long id, Notificacion notificacionActualizada) {
-        Notificacion notificacion = notificacionRepository.findById(id)
+        return notificacionRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Notificación no encontrada"));
-
-        notificacion.setTipo(notificacionActualizada.getTipo());
-        notificacion.setMensaje(notificacionActualizada.getMensaje());
-
-        return notificacionRepository.save(notificacion);
     }
 
     @Override

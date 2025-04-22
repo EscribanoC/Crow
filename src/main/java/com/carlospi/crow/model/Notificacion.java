@@ -1,5 +1,6 @@
 package com.carlospi.crow.model;
 
+import com.carlospi.crow.model.enumeration.TipoNotificacion;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -18,7 +19,7 @@ public class Notificacion {
     private Long id;
 
     @NotBlank
-    private String tipo;
+    private TipoNotificacion tipo;
 
     @Size(max = 255)
     @NotBlank

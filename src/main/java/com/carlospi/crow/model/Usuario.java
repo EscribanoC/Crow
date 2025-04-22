@@ -55,16 +55,16 @@ public class Usuario implements UserDetails {
     private List<Recompensa> recompensas = new ArrayList<>();
 
     @ManyToMany
-    @JoinTable(name = "usuario_favorito",
+    @JoinTable(name = "usuario_seguido",
             joinColumns = @JoinColumn(name = "usuario_id"),
-            inverseJoinColumns = @JoinColumn(name = "usuario_favorito_id"))
-    private List<Usuario> usuariosFavoritos = new ArrayList<>();
+            inverseJoinColumns = @JoinColumn(name = "usuario_seguido_id"))
+    private List<Usuario> usuariosSeguidos = new ArrayList<>();
 
     @ManyToMany
-    @JoinTable(name = "crow_favorito",
+    @JoinTable(name = "crow_seguido",
             joinColumns = @JoinColumn(name = "usuario_id"),
             inverseJoinColumns = @JoinColumn(name = "crow_id"))
-    private List<Crow> crowsFavoritos = new ArrayList<>();
+    private List<Crow> crowsSeguidos = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
