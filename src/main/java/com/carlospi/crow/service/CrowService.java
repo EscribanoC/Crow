@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CrowService {
-    Crow crearCrow(Crow crow);
+    public Crow crearCrow(Crow crow);
     Optional<Crow> obtenerPorId(Long id);
     List<Crow> listarCrows();
     Crow actualizarCrow(Long id, Crow crow);

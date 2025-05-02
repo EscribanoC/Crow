@@ -53,7 +53,8 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     public List<Usuario> obtenerSeguidores(Long usuarioId) {
-        return usuarioRepository.findSeguidoresByUsuarioId(usuarioId);
+        return null;
+        //return usuarioRepository.findSeguidoresByUsuarioId(usuarioId);
     }
 }
 

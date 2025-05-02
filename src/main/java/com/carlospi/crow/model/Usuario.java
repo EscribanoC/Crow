@@ -1,6 +1,8 @@
 package com.carlospi.crow.model;
 
 import com.carlospi.crow.model.enumeration.Genero;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -34,6 +36,7 @@ public class Usuario implements UserDetails {
 
     @NotBlank
     @Size(min = 8, message = "La contraseña debe tener al menos 8 caracteres")
+    @JsonIgnore
     private String password;
 
     @NotNull
@@ -43,6 +46,7 @@ public class Usuario implements UserDetails {
     private String avatar;
 
     @OneToMany(mappedBy = "usuario")
+    @JsonBackReference
     private List<Crow> crows = new ArrayList<>();
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
