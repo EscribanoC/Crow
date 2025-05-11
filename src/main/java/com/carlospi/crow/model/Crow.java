@@ -1,6 +1,6 @@
 package com.carlospi.crow.model;
 
-import com.carlospi.crow.model.enumeration.CategoriaCrow;
+import com.carlospi.crow.model.enumeration.CategoriaCrowEnum;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.FutureOrPresent;
@@ -50,7 +50,7 @@ public class Crow {
     private LocalDateTime fechaLimite;
 
     @Enumerated(EnumType.STRING)
-    private CategoriaCrow categoria;
+    private CategoriaCrowEnum categoria;
 
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)

@@ -1,6 +1,6 @@
 package com.carlospi.crow.model;
 
-import com.carlospi.crow.model.enumeration.Genero;
+import com.carlospi.crow.model.enumeration.GeneroEnum;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -41,7 +41,7 @@ public class Usuario implements UserDetails {
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    private Genero genero;
+    private GeneroEnum genero;
 
     private String avatar;
 

@@ -2,7 +2,7 @@ package com.carlospi.crow.service.impl;
 
 import com.carlospi.crow.model.Notificacion;
 import com.carlospi.crow.model.Usuario;
-import com.carlospi.crow.model.enumeration.TipoNotificacion;
+import com.carlospi.crow.model.enumeration.TipoNotificacionEnum;
 import com.carlospi.crow.repository.NotificacionRepository;
 import com.carlospi.crow.service.NotificacionService;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ public class NotificacionServiceImpl implements NotificacionService {
     }
 
     @Override
-    public void crearNotificacion(TipoNotificacion tipoNotificacion, String mensaje, Usuario usuario) {
+    public void crearNotificacion(TipoNotificacionEnum tipoNotificacion, String mensaje, Usuario usuario) {
         Notificacion notificacion = new Notificacion();
         notificacion.setTipo(tipoNotificacion);
         notificacion.setMensaje(mensaje);

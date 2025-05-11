@@ -1,6 +1,6 @@
 package com.carlospi.crow.model.enumeration;
 
-public enum CategoriaCrow {
+public enum CategoriaCrowEnum {
     LIBRO,
     JUEGODEMESA,
     AUDIOVISUAL,

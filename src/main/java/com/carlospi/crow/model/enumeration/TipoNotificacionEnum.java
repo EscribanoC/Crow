@@ -1,5 +1,5 @@
 package com.carlospi.crow.model.enumeration;
 
-public enum TipoNotificacion {
+public enum TipoNotificacionEnum {
     DONACION, NUEVO_CROW
 }

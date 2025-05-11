@@ -4,7 +4,7 @@ import com.carlospi.crow.config.JwtService;
 import com.carlospi.crow.model.Crow;
 import com.carlospi.crow.model.Donacion;
 import com.carlospi.crow.model.Usuario;
-import com.carlospi.crow.model.enumeration.TipoNotificacion;
+import com.carlospi.crow.model.enumeration.TipoNotificacionEnum;
 import com.carlospi.crow.repository.CrowRepository;
 import com.carlospi.crow.repository.UsuarioRepository;
 import com.carlospi.crow.service.DonacionService;
@@ -49,7 +49,7 @@ public class DonacionController {
         Donacion donacionCreada = donacionService.crearDonacion(donacion);
 
         String mensaje = usuario.getUsuario() + " ha donado " + cantidad + "€ a tu Crow \"" + crow.getTitulo() + "\".";
-        notificacionService.crearNotificacion(TipoNotificacion.DONACION, mensaje, crow.getUsuario());
+        notificacionService.crearNotificacion(TipoNotificacionEnum.DONACION, mensaje, crow.getUsuario());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(donacionCreada);
     }

@@ -1,6 +1,6 @@
 package com.carlospi.crow.controller.auth;
 
-import com.carlospi.crow.model.enumeration.Genero;
+import com.carlospi.crow.model.enumeration.GeneroEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,6 +15,6 @@ public class RegisterRequest {
     private String email;
     private String usuario;
     private String password;
-    private Genero genero;
+    private GeneroEnum genero;
     private String avatar;
 }
