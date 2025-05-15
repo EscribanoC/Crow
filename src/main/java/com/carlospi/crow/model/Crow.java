@@ -1,6 +1,7 @@
 package com.carlospi.crow.model;
 
 import com.carlospi.crow.model.enumeration.CategoriaCrowEnum;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.FutureOrPresent;
@@ -54,7 +55,7 @@ public class Crow {
 
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)
-    @JsonManagedReference
+    @JsonBackReference
     private Usuario usuario;
 
     @OneToMany(mappedBy = "crow", cascade = CascadeType.ALL, orphanRemoval = true)

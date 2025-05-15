@@ -3,6 +3,7 @@ package com.carlospi.crow.model;
 import com.carlospi.crow.model.enumeration.GeneroEnum;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -46,7 +47,7 @@ public class Usuario implements UserDetails {
     private String avatar;
 
     @OneToMany(mappedBy = "usuario")
-    @JsonBackReference
+    @JsonManagedReference
     private List<Crow> crows = new ArrayList<>();
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)

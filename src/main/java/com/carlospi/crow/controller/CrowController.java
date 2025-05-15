@@ -1,6 +1,7 @@
 package com.carlospi.crow.controller;
 
 import com.carlospi.crow.config.JwtService;
+import com.carlospi.crow.dto.CrowDTO;
 import com.carlospi.crow.model.Crow;
 import com.carlospi.crow.model.Usuario;
 import com.carlospi.crow.repository.UsuarioRepository;
@@ -44,8 +45,18 @@ public class CrowController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Crow>> listarCrows() {
-        return ResponseEntity.ok(crowService.listarCrows());
+    public ResponseEntity<List<CrowDTO>> listarCrows() {
+        List<Crow> crows = crowService.listarCrows();
+
+        if (crows.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        List<CrowDTO> dto = crows.stream()
+                .map(crow -> new CrowDTO(crow))
+                .toList();
+
+        return ResponseEntity.ok(dto);
     }
 
     @PutMapping("/{id}")
