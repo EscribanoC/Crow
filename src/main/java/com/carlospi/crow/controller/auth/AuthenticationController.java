@@ -16,7 +16,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/auth")
+@RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthenticationController {
 

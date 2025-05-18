@@ -15,7 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/notificaciones")
+@RequestMapping("/notificaciones")
 @RequiredArgsConstructor
 public class NotificacionController {
 

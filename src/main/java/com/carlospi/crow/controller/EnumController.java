@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/enums")
+@RequestMapping("/enums")
 public class EnumController {
 
     @GetMapping("/generos")

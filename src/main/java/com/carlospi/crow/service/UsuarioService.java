@@ -12,5 +12,6 @@ public interface UsuarioService {
     Usuario actualizarUsuario(Long id, Usuario usuarioActualizado);
     void eliminarUsuario(Long id);
     public List<Usuario> obtenerSeguidores(Long usuarioId);
+    Optional<Usuario> obtenerPorEmail(String email);
 }
 

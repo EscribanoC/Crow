@@ -1,7 +1,8 @@
 package com.carlospi.crow.controller;
 
 import com.carlospi.crow.config.JwtService;
-import com.carlospi.crow.dto.CrowDTO;
+import com.carlospi.crow.dto.request.CrowRequestDTO;
+import com.carlospi.crow.dto.response.CrowResponseDTO;
 import com.carlospi.crow.model.Crow;
 import com.carlospi.crow.model.Usuario;
 import com.carlospi.crow.repository.UsuarioRepository;
@@ -9,15 +10,17 @@ import com.carlospi.crow.service.CrowService;
 import com.carlospi.crow.service.NotificacionService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/crows")
+@RequestMapping("/crows")
 @RequiredArgsConstructor
 public class CrowController {
 
@@ -26,14 +29,39 @@ public class CrowController {
     private final JwtService jwtService;
     private final NotificacionService notificacionService;
 
-    @PostMapping
-    public ResponseEntity<Crow> crearCrow(@RequestBody Crow crow, HttpServletRequest request) {
+    @GetMapping
+    public ResponseEntity<List<CrowResponseDTO>> listarCrows() {
+        List<Crow> crows = crowService.listarCrows();
+
+        if (crows.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        List<CrowResponseDTO> dto = crows.stream()
+                .map(crow -> new CrowResponseDTO(crow))
+                .toList();
+
+        return ResponseEntity.ok(dto);
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<CrowResponseDTO> crearCrow(@RequestBody CrowRequestDTO crowRequestdto, HttpServletRequest request) {
         String email = jwtService.extractUsername(getToken(request));
         Usuario usuario = usuarioRepository.findByEmail(email).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        crow.setUsuario(usuario);
-        Crow nuevoCrow = crowService.crearCrow(crow);
+        Crow crow = new Crow();
 
+        ModelMapper mapper = new ModelMapper();
+        mapper.map(crowRequestdto, crow);
+
+        crow.setUsuario(usuario);
+        crow.setFechaCreacion(LocalDateTime.now());
+        crow.setRecompensas(null);
+        crow.setDonaciones(null);
+
+        CrowResponseDTO crowResponsedto = new CrowResponseDTO(crow);
+        
+        crowService.crearCrow(crow);
         /*
         List<Usuario> seguidores = usuarioRepository.findSeguidoresByUsuarioId(usuario.getId());
         for (Usuario seguidor : seguidores) {
@@ -41,25 +69,10 @@ public class CrowController {
             notificacionService.crearNotificacion(TipoNotificacion.NUEVO_CROW, mensaje, seguidor);
         }*/
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(nuevoCrow);
+        return ResponseEntity.status(HttpStatus.CREATED).body(crowResponsedto);
     }
 
-    @GetMapping
-    public ResponseEntity<List<CrowDTO>> listarCrows() {
-        List<Crow> crows = crowService.listarCrows();
-
-        if (crows.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-
-        List<CrowDTO> dto = crows.stream()
-                .map(crow -> new CrowDTO(crow))
-                .toList();
-
-        return ResponseEntity.ok(dto);
-    }
-
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<Crow> actualizarCrow(@PathVariable Long id, @RequestBody Crow crowEditado, HttpServletRequest request) {
         String email = jwtService.extractUsername(getToken(request));
         Usuario usuario = usuarioRepository.findByEmail(email).orElseThrow();
@@ -75,7 +88,7 @@ public class CrowController {
         return ResponseEntity.ok(actualizado);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> eliminarCrow(@PathVariable Long id, HttpServletRequest request) {
         String email = jwtService.extractUsername(getToken(request));
         Usuario usuario = usuarioRepository.findByEmail(email).orElseThrow();
@@ -87,6 +100,31 @@ public class CrowController {
 
         crowService.eliminarCrow(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/crowOfTheWeek")
+    public ResponseEntity<CrowResponseDTO> crowOfTheWeek() {
+        List<Crow> crows = crowService.listarCrows();
+
+        if (crows.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        Crow crow = crows.stream()
+                .filter(c -> c.getMetaDonacion() != null && c.getMetaDonacion() > 0)
+                .max((c1, c2) -> {
+                    double progress1 = (double) c1.getRecaudado() / c1.getMetaDonacion();
+                    double progress2 = (double) c2.getRecaudado() / c2.getMetaDonacion();
+                    return Double.compare(progress1, progress2);
+                })
+                .orElse(null);
+
+        if (crow == null) {
+            return ResponseEntity.noContent().build();
+        }
+
+        CrowResponseDTO crowResponseDTO = new CrowResponseDTO(crow);
+        return ResponseEntity.ok(crowResponseDTO);
     }
 
     private String getToken(HttpServletRequest request) {

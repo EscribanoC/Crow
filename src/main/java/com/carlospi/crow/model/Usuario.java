@@ -46,6 +46,7 @@ public class Usuario implements UserDetails {
 
     private String avatar;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "usuario")
     @JsonManagedReference
     private List<Crow> crows = new ArrayList<>();

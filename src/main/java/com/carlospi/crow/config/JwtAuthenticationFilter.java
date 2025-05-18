@@ -26,7 +26,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
     private static final List<String> PUBLIC_URLS = List.of(
-            "/api/v1/auth",
+            "/auth",
             "/v3/api-docs",
             "/v3/api-docs/",
             "/v3/api-docs/**",

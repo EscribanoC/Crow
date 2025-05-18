@@ -56,5 +56,10 @@ public class UsuarioServiceImpl implements UsuarioService {
         return null;
         //return usuarioRepository.findSeguidoresByUsuarioId(usuarioId);
     }
+
+    @Override
+    public Optional<Usuario> obtenerPorEmail(String email) {
+        return usuarioRepository.findByEmail(email);
+    }
 }
 
