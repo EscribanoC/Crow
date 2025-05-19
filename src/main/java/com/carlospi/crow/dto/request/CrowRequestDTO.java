@@ -20,15 +20,4 @@ public class CrowRequestDTO {
     private String[] imagenes;
     private LocalDateTime fechaLimite;
     private CategoriaCrowEnum categoria;
-
-    public CrowRequestDTO(Crow crow) {
-        this.titulo = crow.getTitulo();
-        this.descripcion = crow.getDescripcion();
-        this.metaDonacion = crow.getMetaDonacion();
-        this.recaudado = crow.getRecaudado();
-        this.videoPromocional = crow.getVideoPromocional();
-        this.imagenes = crow.getImagenes().toArray(new String[0]);
-        this.fechaLimite = crow.getFechaLimite();
-        this.categoria = crow.getCategoria();
-    }
 }

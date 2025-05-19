@@ -1,5 +1,6 @@
 package com.carlospi.crow.controller;
 
+import com.carlospi.crow.model.enumeration.CategoriaCrowEnum;
 import com.carlospi.crow.model.enumeration.GeneroEnum;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +13,11 @@ public class EnumController {
     @GetMapping("/generos")
     public GeneroEnum[] getGenders() {
         return GeneroEnum.values();
+    }
+
+    @GetMapping("/categorias")
+    public CategoriaCrowEnum[] getCategories() {
+        return CategoriaCrowEnum.values();
     }
 
     
