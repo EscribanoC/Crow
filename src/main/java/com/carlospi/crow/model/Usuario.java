@@ -1,7 +1,6 @@
 package com.carlospi.crow.model;
 
 import com.carlospi.crow.model.enumeration.GeneroEnum;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -30,9 +29,11 @@ public class Usuario implements UserDetails {
 
     @NotBlank
     @Email
+    @Column(unique = true, nullable = false)
     private String email;
 
     @NotBlank
+    @Column(unique = true, nullable = false)
     private String usuario;
 
     @NotBlank

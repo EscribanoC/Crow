@@ -10,12 +10,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UsuarioResponseDTO {
+    private Long id;
     private String email;
     private String usuario;
     private String avatar;
     private GeneroEnum genero;
 
     public UsuarioResponseDTO(Usuario usuario) {
+        this.id = usuario.getId();
         this.email = usuario.getEmail();
         this.usuario = usuario.getUsuario();
         this.avatar = usuario.getAvatar();

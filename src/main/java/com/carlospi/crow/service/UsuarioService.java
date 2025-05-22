@@ -13,5 +13,7 @@ public interface UsuarioService {
     void eliminarUsuario(Long id);
     public List<Usuario> obtenerSeguidores(Long usuarioId);
     Optional<Usuario> obtenerPorEmail(String email);
+
+    Optional<Usuario> obtenerPorUsuario(String usuario);
 }
 

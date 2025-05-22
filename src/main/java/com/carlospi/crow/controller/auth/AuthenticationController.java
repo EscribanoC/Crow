@@ -1,6 +1,7 @@
 package com.carlospi.crow.controller.auth;
 
 import com.carlospi.crow.model.enumeration.GeneroEnum;
+import com.carlospi.crow.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -21,6 +22,7 @@ import java.util.UUID;
 public class AuthenticationController {
 
     private final AuthenticationService service;
+    private final UsuarioRepository usuarioRepository;
 
     @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<AuthenticationResponse> register(
@@ -43,6 +45,17 @@ public class AuthenticationController {
             Files.copy(avatarFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
+        if (usuarioRepository.existsByEmail(email)) {
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body(new AuthenticationResponse("Este correo ya está registrado"));
+        }
+        if (usuarioRepository.existsByUsuario(usuario)) {
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body(new AuthenticationResponse("Este nombre de usuario ya está en uso"));
         }
 
         RegisterRequest request = RegisterRequest.builder()

@@ -102,6 +102,13 @@ public class CrowController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<CrowResponseDTO> obtenerCrowPorId(@PathVariable Long id) {
+        Crow crow = crowService.obtenerPorId(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        CrowResponseDTO crowResponseDTO = new CrowResponseDTO(crow);
+        return ResponseEntity.ok(crowResponseDTO);
+    }
+
     @GetMapping("/crowOfTheWeek")
     public ResponseEntity<CrowResponseDTO> crowOfTheWeek() {
         List<Crow> crows = crowService.listarCrows();

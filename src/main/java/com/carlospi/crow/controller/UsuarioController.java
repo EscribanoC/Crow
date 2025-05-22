@@ -1,6 +1,7 @@
 package com.carlospi.crow.controller;
 
 import com.carlospi.crow.dto.request.UsuarioRequestDTO;
+import com.carlospi.crow.dto.response.UsuarioResponseDTO;
 import com.carlospi.crow.model.Usuario;
 import com.carlospi.crow.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
@@ -32,12 +33,23 @@ public class UsuarioController {
         return ResponseEntity.ok(dto);
     }
 
+    @GetMapping("/usuario/{usuario}")
+    public ResponseEntity<UsuarioRequestDTO> getUsuarioByUsuario(@PathVariable String usuario) {
+        Optional<Usuario> u = usuarioService.obtenerPorUsuario(usuario);
+        if (u.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        Usuario user = u.get();
+        UsuarioRequestDTO dto = new UsuarioRequestDTO(user);
+        return ResponseEntity.ok(dto);
+    }
+
     @GetMapping("/me")
-    public ResponseEntity<UsuarioRequestDTO> getCurrentUsuario(@AuthenticationPrincipal Usuario usuario) {
+    public ResponseEntity<UsuarioResponseDTO> getCurrentUsuario(@AuthenticationPrincipal Usuario usuario) {
         if (usuario == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        UsuarioRequestDTO dto = new UsuarioRequestDTO(usuario);
+        UsuarioResponseDTO dto = new UsuarioResponseDTO(usuario);
         return ResponseEntity.ok(dto);
     }
 }
