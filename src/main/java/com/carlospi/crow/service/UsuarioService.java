@@ -13,7 +13,8 @@ public interface UsuarioService {
     void eliminarUsuario(Long id);
     public List<Usuario> obtenerSeguidores(Long usuarioId);
     Optional<Usuario> obtenerPorEmail(String email);
-
     Optional<Usuario> obtenerPorUsuario(String usuario);
+    void dejarDeSeguirUsuario(Usuario seguidor, Long seguidoId);
+    void seguirUsuario(Usuario seguidor, Long seguidoId);
 }
 

@@ -10,6 +10,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +49,7 @@ public class Crow {
 
     @NotNull
     @FutureOrPresent
-    private LocalDateTime fechaLimite;
+    private LocalDate fechaLimite;
 
     @Enumerated(EnumType.STRING)
     private CategoriaCrowEnum categoria;

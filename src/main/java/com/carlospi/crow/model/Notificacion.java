@@ -18,16 +18,22 @@ public class Notificacion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+    @Enumerated(EnumType.STRING)
     private TipoNotificacionEnum tipo;
 
-    @Size(max = 255)
-    @NotBlank
-    private String mensaje;
-
-    private LocalDateTime fecha = LocalDateTime.now();
+    @ManyToOne
+    @JoinColumn(name = "receptor_id")
+    private Usuario receptor;
 
     @ManyToOne
-    @JoinColumn(name = "usuario_id", nullable = false)
-    private Usuario usuario;
+    @JoinColumn(name = "emisor_id")
+    private Usuario emisor;
+
+    @ManyToOne
+    @JoinColumn(name = "crow_id", nullable = true)
+    private Crow crow;
+
+    private LocalDateTime fechaCreacion = LocalDateTime.now();
+
+    private boolean leida = false;
 }

@@ -11,4 +11,6 @@ public interface CrowService {
     List<Crow> listarCrows();
     Crow actualizarCrow(Long id, Crow crow);
     void eliminarCrow(Long id);
+
+    List<Crow> obtenerCrowsPorUsuario(Long userId);
 }

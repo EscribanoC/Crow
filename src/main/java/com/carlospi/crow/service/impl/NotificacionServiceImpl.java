@@ -1,5 +1,6 @@
 package com.carlospi.crow.service.impl;
 
+import com.carlospi.crow.model.Crow;
 import com.carlospi.crow.model.Notificacion;
 import com.carlospi.crow.model.Usuario;
 import com.carlospi.crow.model.enumeration.TipoNotificacionEnum;
@@ -20,17 +21,20 @@ public class NotificacionServiceImpl implements NotificacionService {
     }
 
     @Override
-    public void crearNotificacion(TipoNotificacionEnum tipoNotificacion, String mensaje, Usuario usuario) {
+    public void crearNotificacion(TipoNotificacionEnum tipoNotificacion, Usuario receptor, Usuario emisor, Crow crow) {
         Notificacion notificacion = new Notificacion();
         notificacion.setTipo(tipoNotificacion);
-        notificacion.setMensaje(mensaje);
-        notificacion.setUsuario(usuario);
+        notificacion.setReceptor(receptor);
+        notificacion.setEmisor(emisor);
+        if (crow != null) {
+            notificacion.setCrow(crow);
+        }
         notificacionRepository.save(notificacion);
     }
 
     @Override
     public List<Notificacion> obtenerNotificacionesPorUsuario(Long usuarioId) {
-        return notificacionRepository.findByUsuarioIdOrderByFechaDesc(usuarioId);
+        return notificacionRepository.findByReceptorIdOrderByFechaCreacionDesc(usuarioId);
     }
 
     @Override

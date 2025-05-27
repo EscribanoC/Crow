@@ -52,7 +52,7 @@ public class Usuario implements UserDetails {
     @JsonManagedReference
     private List<Crow> crows = new ArrayList<>();
 
-    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "receptor", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Notificacion> notificaciones = new ArrayList<>();
 
     @ManyToMany
@@ -66,6 +66,9 @@ public class Usuario implements UserDetails {
             joinColumns = @JoinColumn(name = "usuario_id"),
             inverseJoinColumns = @JoinColumn(name = "usuario_seguido_id"))
     private List<Usuario> usuariosSeguidos = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "usuariosSeguidos")
+    private List<Usuario> seguidores = new ArrayList<>();
 
     @ManyToMany
     @JoinTable(name = "crow_seguido",

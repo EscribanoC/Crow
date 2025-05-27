@@ -1,29 +1,21 @@
 package com.carlospi.crow.dto.response;
 
 import com.carlospi.crow.model.Usuario;
-import com.carlospi.crow.model.enumeration.GeneroEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UsuarioResponseDTO {
+public class UsuarioBasicResponseDTO {
     private Long id;
-    private String email;
     private String usuario;
     private String avatar;
-    private GeneroEnum genero;
-    private boolean isFollowing;
 
-    public UsuarioResponseDTO(Usuario usuario) {
+    public UsuarioBasicResponseDTO(Usuario usuario) {
         this.id = usuario.getId();
-        this.email = usuario.getEmail();
         this.usuario = usuario.getUsuario();
         this.avatar = usuario.getAvatar();
-        this.genero = usuario.getGenero();
     }
 }

@@ -3,7 +3,10 @@ package com.carlospi.crow.service.impl;
 import com.carlospi.crow.model.Usuario;
 import com.carlospi.crow.repository.UsuarioRepository;
 import com.carlospi.crow.service.UsuarioService;
+import jakarta.transaction.Transactional;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -65,6 +68,32 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Override
     public Optional<Usuario> obtenerPorUsuario(String usuario){
         return usuarioRepository.findByUsuario(usuario);
+    }
+
+    @Transactional
+    public void seguirUsuario(Usuario seguidor, Long seguidoId) {
+        Usuario seguidorCompleto = usuarioRepository.findById(seguidor.getId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Seguidor no encontrado"));
+
+        Usuario seguido = usuarioRepository.findById(seguidoId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
+
+        if (!seguidorCompleto.getUsuariosSeguidos().contains(seguido)) {
+            seguidorCompleto.getUsuariosSeguidos().add(seguido);
+            usuarioRepository.save(seguidorCompleto);
+        }
+    }
+
+    @Transactional
+    public void dejarDeSeguirUsuario(Usuario seguidor, Long seguidoId) {
+        Usuario seguidorCompleto = usuarioRepository.findById(seguidor.getId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Seguidor no encontrado"));
+
+        Usuario seguido = usuarioRepository.findById(seguidoId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
+
+        seguidorCompleto.getUsuariosSeguidos().remove(seguido);
+        usuarioRepository.save(seguidorCompleto);
     }
 }
 

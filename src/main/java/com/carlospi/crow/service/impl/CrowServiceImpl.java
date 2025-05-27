@@ -55,5 +55,10 @@ public class CrowServiceImpl implements CrowService {
     public void eliminarCrow(Long id) {
         crowRepository.deleteById(id);
     }
+
+    @Override
+    public List<Crow> obtenerCrowsPorUsuario(Long userId) {
+        return crowRepository.findByUsuarioId(userId);
+    }
 }
 

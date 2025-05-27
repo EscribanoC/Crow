@@ -48,8 +48,7 @@ public class DonacionController {
 
         Donacion donacionCreada = donacionService.crearDonacion(donacion);
 
-        String mensaje = usuario.getUsuario() + " ha donado " + cantidad + "€ a tu Crow \"" + crow.getTitulo() + "\".";
-        notificacionService.crearNotificacion(TipoNotificacionEnum.DONACION, mensaje, crow.getUsuario());
+        //notificacionService.crearNotificacion(TipoNotificacionEnum.DONACION,  crow.getUsuario());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(donacionCreada);
     }

@@ -1,17 +1,16 @@
 package com.carlospi.crow.controller;
 
+import com.carlospi.crow.config.JwtService;
 import com.carlospi.crow.dto.request.UsuarioRequestDTO;
 import com.carlospi.crow.dto.response.UsuarioResponseDTO;
 import com.carlospi.crow.model.Usuario;
 import com.carlospi.crow.service.UsuarioService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -34,13 +33,34 @@ public class UsuarioController {
     }
 
     @GetMapping("/usuario/{usuario}")
-    public ResponseEntity<UsuarioRequestDTO> getUsuarioByUsuario(@PathVariable String usuario) {
+    public ResponseEntity<UsuarioResponseDTO> getUsuarioByUsuario(HttpServletRequest request,
+                                                                  @PathVariable String usuario) {
+        JwtService jwtService = new JwtService();
+        Usuario usuarioActual = null;
+        if(request.getHeader("Authorization") != null) {
+            String token = request.getHeader("Authorization").replace("Bearer ", "");
+            if (!token.isEmpty()) {
+                String email = jwtService.extractUsername(token);
+                usuarioActual = usuarioService.obtenerPorEmail(email).orElse(null);
+            }
+        }
+
+
         Optional<Usuario> u = usuarioService.obtenerPorUsuario(usuario);
         if (u.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         Usuario user = u.get();
-        UsuarioRequestDTO dto = new UsuarioRequestDTO(user);
+
+        UsuarioResponseDTO dto = new UsuarioResponseDTO(user);
+
+
+        if(usuarioActual != null) {
+            boolean isFollowing = usuarioActual.getUsuariosSeguidos().contains(user);
+            dto.setFollowing(isFollowing);
+            System.out.println("Usuario actual: " + usuarioActual.getUsuario() + ", siguiendo a: " + user.getUsuario() + " - " + isFollowing);
+        }
+
         return ResponseEntity.ok(dto);
     }
 
@@ -51,5 +71,27 @@ public class UsuarioController {
         }
         UsuarioResponseDTO dto = new UsuarioResponseDTO(usuario);
         return ResponseEntity.ok(dto);
+    }
+
+    @PostMapping("/follow/{id}")
+    public ResponseEntity<Void> seguirUsuario(@AuthenticationPrincipal Usuario usuarioActual,
+                                              @PathVariable Long id) {
+        if (usuarioActual == null || usuarioActual.getId().equals(id)) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        usuarioService.seguirUsuario(usuarioActual, id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/unfollow/{id}")
+    public ResponseEntity<Void> dejarDeSeguir(@AuthenticationPrincipal Usuario usuarioActual,
+                                              @PathVariable Long id) {
+        if (usuarioActual == null || usuarioActual.getId().equals(id)) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        usuarioService.dejarDeSeguirUsuario(usuarioActual, id);
+        return ResponseEntity.ok().build();
     }
 }
