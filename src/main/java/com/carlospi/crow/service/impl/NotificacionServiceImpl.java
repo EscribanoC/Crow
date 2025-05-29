@@ -6,7 +6,9 @@ import com.carlospi.crow.model.Usuario;
 import com.carlospi.crow.model.enumeration.TipoNotificacionEnum;
 import com.carlospi.crow.repository.NotificacionRepository;
 import com.carlospi.crow.service.NotificacionService;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -37,10 +39,11 @@ public class NotificacionServiceImpl implements NotificacionService {
         return notificacionRepository.findByReceptorIdOrderByFechaCreacionDesc(usuarioId);
     }
 
-    @Override
-    public Notificacion obtenerNotificacionPorId(Long id) {
-        return notificacionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Notificación no encontrada"));
+    public void marcarComoLeida(Long id) {
+        Notificacion notificacion = notificacionRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Notificación no encontrada"));
+        notificacion.setLeida(true);
+        notificacionRepository.save(notificacion);
     }
 
     @Override

@@ -13,7 +13,5 @@ public interface NotificacionService {
     Optional<Notificacion> obtenerPorId(Long id);
     void eliminarNotificacion(Long id);
     List<Notificacion> obtenerNotificacionesPorUsuario(Long id);
-
-    Notificacion obtenerNotificacionPorId(Long id);
-
+    void marcarComoLeida(Long id);
 }

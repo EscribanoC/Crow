@@ -1,6 +1,7 @@
 package com.carlospi.crow.model;
 
 import com.carlospi.crow.model.enumeration.GeneroEnum;
+import com.carlospi.crow.model.enumeration.RoleEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -46,6 +47,10 @@ public class Usuario implements UserDetails {
     private GeneroEnum genero;
 
     private String avatar;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private RoleEnum rol;
 
     @ToString.Exclude
     @OneToMany(mappedBy = "usuario")

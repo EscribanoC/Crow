@@ -2,6 +2,7 @@ package com.carlospi.crow.controller.auth;
 
 import com.carlospi.crow.config.JwtService;
 import com.carlospi.crow.model.enumeration.GeneroEnum;
+import com.carlospi.crow.model.enumeration.RoleEnum;
 import com.carlospi.crow.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -9,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -61,12 +63,12 @@ public class AuthenticationController {
         if (usuarioRepository.existsByEmail(email)) {
             return ResponseEntity
                     .status(HttpStatus.CONFLICT)
-                    .body(new AuthenticationResponse("Este correo ya está registrado", ""));
+                    .body(new AuthenticationResponse("Este correo ya está registrado", "", ""));
         }
         if (usuarioRepository.existsByUsuario(usuario)) {
             return ResponseEntity
                     .status(HttpStatus.CONFLICT)
-                    .body(new AuthenticationResponse("Este nombre de usuario ya está en uso", ""));
+                    .body(new AuthenticationResponse("Este nombre de usuario ya está en uso", "", ""));
         }
 
         RegisterRequest request = RegisterRequest.builder()
@@ -75,6 +77,7 @@ public class AuthenticationController {
                 .password(password)
                 .genero(genero)
                 .avatar(avatarPath)
+                .rol(RoleEnum.ROLE_USER)
                 .build();
 
         return ResponseEntity.ok(service.register(request));
@@ -87,9 +90,9 @@ public class AuthenticationController {
         );
 
         var usuario = usuarioRepository.findByEmail(request.getEmail())
-                .orElseThrow();
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
 
-        var jwtToken = jwtService.generateToken(usuario);
-        return new AuthenticationResponse(jwtToken, usuario.getUsuario());
+        var jwtToken = jwtService.generateTokenWithRole(usuario.getEmail(), usuario.getRol().name());
+        return new AuthenticationResponse(jwtToken, usuario.getUsuario(), usuario.getRol().name());
     }
 }

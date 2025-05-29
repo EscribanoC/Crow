@@ -38,6 +38,12 @@ public class NotificacionController {
         return ResponseEntity.noContent().build();
     }
 
+    @PatchMapping("/{id}/leer")
+    public ResponseEntity<Void> marcarComoLeida(@PathVariable Long id) {
+        notificacionService.marcarComoLeida(id);
+        return ResponseEntity.noContent().build();
+    }
+
     private String getToken(HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
         return authHeader != null && authHeader.startsWith("Bearer ")

@@ -25,6 +25,7 @@ public class AuthenticationService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .genero(request.getGenero())
                 .avatar(request.getAvatar())
+                .rol(request.getRol())
                 .build();
 
         repository.save(user);
