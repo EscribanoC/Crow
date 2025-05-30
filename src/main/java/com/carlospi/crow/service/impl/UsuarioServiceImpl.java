@@ -1,5 +1,6 @@
 package com.carlospi.crow.service.impl;
 
+import com.carlospi.crow.dto.request.UsuarioRequestDTO;
 import com.carlospi.crow.model.Usuario;
 import com.carlospi.crow.repository.UsuarioRepository;
 import com.carlospi.crow.service.UsuarioService;
@@ -36,18 +37,20 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public Usuario actualizarUsuario(Long id, Usuario usuarioActualizado) {
-        Usuario usuarioExistente = usuarioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado."));
+    public void actualizarUsuario(Long id, UsuarioRequestDTO dto) {
+        Usuario usuario = obtenerPorId(id).orElseThrow();
 
-        usuarioExistente.setEmail(usuarioActualizado.getEmail());
-        usuarioExistente.setUsuario(usuarioActualizado.getUsuario());
-        usuarioExistente.setPassword(usuarioActualizado.getPassword());
-        usuarioExistente.setGenero(usuarioActualizado.getGenero());
-        usuarioExistente.setAvatar(usuarioActualizado.getAvatar());
+        usuario.setEmail(dto.getEmail());
+        usuario.setUsuario(dto.getUsuario());
+        usuario.setGenero(dto.getGenero());
 
-        return usuarioRepository.save(usuarioExistente);
+        if (dto.getAvatar() != null) {
+            usuario.setAvatar(dto.getAvatar());
+        }
+
+        usuarioRepository.save(usuario);
     }
+
 
     @Override
     public void eliminarUsuario(Long id) {
