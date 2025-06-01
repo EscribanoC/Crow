@@ -8,12 +8,14 @@ import com.carlospi.crow.model.Crow;
 import com.carlospi.crow.model.Usuario;
 import com.carlospi.crow.model.enumeration.GeneroEnum;
 import com.carlospi.crow.service.UsuarioService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -78,7 +80,6 @@ public class UsuarioController {
         u.setGenero(genero);
 
         if (avatarFile != null && !avatarFile.isEmpty()) {
-            System.out.println("-------------------------Avatar recibido-------------------------");
             String uploadDir = "uploads/avatars/";
             String fileName = UUID.randomUUID() + "_" + avatarFile.getOriginalFilename();
             Path uploadPath = Paths.get(uploadDir);
@@ -97,6 +98,19 @@ public class UsuarioController {
         usuarioService.actualizarUsuario(id, new UsuarioRequestDTO(u));
 
         return ResponseEntity.ok().build();
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminarUsuario(@PathVariable Long id) {
+        try {
+            usuarioService.eliminarUsuario(id);
+            return ResponseEntity.noContent().build();
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @GetMapping("/usuario/{usuario}")

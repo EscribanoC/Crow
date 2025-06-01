@@ -10,6 +10,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -55,6 +57,7 @@ public class Usuario implements UserDetails {
     @ToString.Exclude
     @OneToMany(mappedBy = "usuario")
     @JsonManagedReference
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Crow> crows = new ArrayList<>();
 
     @OneToMany(mappedBy = "receptor", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -2,12 +2,14 @@ package com.carlospi.crow.controller;
 
 import com.carlospi.crow.config.JwtService;
 import com.carlospi.crow.dto.request.CrowRequestDTO;
+import com.carlospi.crow.dto.response.CrowAdminDTO;
 import com.carlospi.crow.dto.response.CrowResponseDTO;
 import com.carlospi.crow.dto.response.RecompensasResponseDTO;
 import com.carlospi.crow.model.Crow;
 import com.carlospi.crow.model.Recompensa;
 import com.carlospi.crow.model.Usuario;
 import com.carlospi.crow.model.enumeration.CategoriaCrowEnum;
+import com.carlospi.crow.model.enumeration.RoleEnum;
 import com.carlospi.crow.model.enumeration.TipoNotificacionEnum;
 import com.carlospi.crow.repository.UsuarioRepository;
 import com.carlospi.crow.service.CrowService;
@@ -32,10 +34,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @RequestMapping("/crows")
@@ -173,29 +172,34 @@ public class CrowController {
         }
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<Crow> actualizarCrow(@PathVariable Long id, @RequestBody Crow crowEditado, HttpServletRequest request) {
+    @PutMapping("/{id}")
+    public ResponseEntity<Crow> actualizarCrow(
+            @PathVariable Long id,
+            @RequestBody Map<String, Object> camposEditados,
+            HttpServletRequest request
+    ) {
         String email = jwtService.extractUsername(getToken(request));
         Usuario usuario = usuarioRepository.findByEmail(email).orElseThrow();
 
-        Crow crowExistente = crowService.obtenerPorId(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        Crow crowExistente = crowService.obtenerPorId(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         if (!crowExistente.getUsuario().getId().equals(usuario.getId())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
 
-        Crow actualizado = crowService.actualizarCrow(id, crowEditado);
+        Crow actualizado = crowService.actualizarCamposParciales(crowExistente, camposEditados);
 
         return ResponseEntity.ok(actualizado);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminarCrow(@PathVariable Long id, HttpServletRequest request) {
         String email = jwtService.extractUsername(getToken(request));
         Usuario usuario = usuarioRepository.findByEmail(email).orElseThrow();
 
         Crow crow = crowService.obtenerPorId(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        if (!crow.getUsuario().getId().equals(usuario.getId())) {
+        if (!crow.getUsuario().getId().equals(usuario.getId()) && usuario.getRol() != RoleEnum.ROLE_ADMIN) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
 
@@ -264,6 +268,16 @@ public class CrowController {
                 .toList();
 
         return ResponseEntity.ok(crowResponseDTOs);
+    }
+
+    @GetMapping("/admin/crows")
+    public ResponseEntity<List<CrowAdminDTO>> getAllCrowsAdmin() {
+        List<CrowAdminDTO> dtos = crowService.listarCrows()
+                .stream()
+                .map(CrowAdminDTO::new)
+                .toList();
+
+        return ResponseEntity.ok(dtos);
     }
 
     private String getToken(HttpServletRequest request) {

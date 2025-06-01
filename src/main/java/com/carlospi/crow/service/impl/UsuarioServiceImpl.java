@@ -4,6 +4,7 @@ import com.carlospi.crow.dto.request.UsuarioRequestDTO;
 import com.carlospi.crow.model.Usuario;
 import com.carlospi.crow.repository.UsuarioRepository;
 import com.carlospi.crow.service.UsuarioService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -52,8 +53,18 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
 
-    @Override
+    @Transactional
     public void eliminarUsuario(Long id) {
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
+
+        usuario.getUsuariosSeguidos().forEach(u -> u.getSeguidores().remove(usuario));
+        usuario.getSeguidores().forEach(u -> u.getUsuariosSeguidos().remove(usuario));
+
+        usuario.getUsuariosSeguidos().clear();
+        usuario.getSeguidores().clear();
+
+        usuarioRepository.save(usuario);
         usuarioRepository.deleteById(id);
     }
 

@@ -44,6 +44,7 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.GET, "/crows/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/usuarios/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/usuarios/**").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/crows/**").authenticated()
                         .requestMatchers(HttpMethod.PUT, "/usuarios/**").authenticated()
                         .anyRequest().authenticated()
                 )

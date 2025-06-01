@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDateTime;
 
@@ -31,6 +33,7 @@ public class Notificacion {
 
     @ManyToOne
     @JoinColumn(name = "crow_id", nullable = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Crow crow;
 
     private LocalDateTime fechaCreacion = LocalDateTime.now();
