@@ -184,7 +184,7 @@ public class CrowController {
         Crow crowExistente = crowService.obtenerPorId(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        if (!crowExistente.getUsuario().getId().equals(usuario.getId())) {
+        if (!crowExistente.getUsuario().getId().equals(usuario.getId()) && usuario.getRol() != RoleEnum.ROLE_ADMIN) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
 
